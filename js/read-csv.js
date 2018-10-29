@@ -6,6 +6,7 @@
 	var rollingAvg = 0;
 	var rollingAvgSize = 0;
 	var firstDataSetDone = false;
+	var goodReads = false;
 
 	function checkFileInput() {
 		if ((document.getElementById("user1File").files.length == 1) &&
@@ -45,9 +46,13 @@
 	
     function loadHandler1(event) {
 		var csv = event.target.result;
-		readData(csv, true);
+		if (readData(csv, true)) {
+			goodReads = true;
+		} else {
+			goodReads = false;
+		}
 		console.log(user1Set);
-		if (firstDataSetDone) {
+		if (firstDataSetDone && goodReads) {
 			AnalyzeData();
 			updateViews();
 		} else {
@@ -57,9 +62,13 @@
 	
 	function loadHandler2(event) {
 		var csv = event.target.result;
-		readData(csv, false);
+		if (readData(csv, false)) {
+			goodReads = true;
+		} else {
+			goodReads = false;
+		}
 		console.log(user2Set);
-		if (firstDataSetDone) {
+		if (firstDataSetDone && goodReads) {
 			AnalyzeData();
 			updateViews();
 		} else {
@@ -69,8 +78,8 @@
 	
 	function updateViews() {
 		document.getElementById("compatibilityScore").innerHTML = rollingAvg.toFixed(2).toString() + "%";
-		var user1Name = document.getElementById("user1NameInput").value
-		var user2Name = document.getElementById("user2NameInput").value
+		var user1Name = document.getElementById("user1NameInput").value;
+		var user2Name = document.getElementById("user2NameInput").value;
 		if (user1Name === "") {
 			user1Name = "User 1";
 		} 
@@ -110,6 +119,10 @@
     function readData(csv, user) {
 		console.log(user);
         var allTextLines = csv.split(/\r\n|\n/);
+		if (allTextLines[0] != "Title,Date") {
+			alert("Invalid file format");
+			return false;
+		}
         for (var i=1; i<allTextLines.length-1; i++) {
             var data = allTextLines[i].substring(0,allTextLines[i].lastIndexOf(","));
 			if (user) {
@@ -120,6 +133,7 @@
 				user2EpisodesWatched++;
 			}
         }
+		return true;
     }
 	
 	function updateRollingAvg(num) {
@@ -131,6 +145,7 @@
 		rollingAvg = 0;
 		rollingAvgSize = 0;
 		firstDataSetDone = false;
+		goodReads = false;
 		numOfUniqueEpisodesBothWatched = 0;
 		user1Set.clear();
 		user1EpisodesWatched = 0;
