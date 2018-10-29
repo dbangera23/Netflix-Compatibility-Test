@@ -1,0 +1,26 @@
+.center{
+	position: fixed;
+	text-align: center;
+    top: 25%;
+	left: 50%;
+	/* bring your own prefixes */
+	transform: translate(-50%, -25%);
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  padding: 15px;
+}
+
+.marginMeTwenty {
+	margin:20px
+}
+.marginRightTwenty {
+	margin-right:20px
+}
+.topcorner{
+   position:absolute;
+   top:0;
+   right:0;
+  }
